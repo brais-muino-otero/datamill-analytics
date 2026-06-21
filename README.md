@@ -110,7 +110,7 @@ Currently supported: Español, English, Português, Italiano, Français, Deutsch
 
 ## Author
 
-**Brais Muiño Otero** — Data Science student (UDC), targeting ML/applied-science roles in the UK/Ireland.
+**Brais Muiño Otero** — Data Science student (UDC), targeting ML/applied-science roles.
 
 🔗 [github.com/brais-muino-otero](https://github.com/brais-muino-otero)
 
