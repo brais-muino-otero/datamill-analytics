@@ -1,0 +1,215 @@
+{
+  "app": {
+    "subtitle": "Análise e predição da Premier League"
+  },
+  "nav": {
+    "football_analytics": "Análise de Futebol",
+    "supervised": "Aprendizagem Supervisionada",
+    "unsupervised": "Aprendizagem Não Supervisionada",
+    "knowledge_hub": "Knowledge Hub"
+  },
+  "language": {
+    "label": "Idioma"
+  },
+  "pages": {
+    "football_analytics": {
+      "title": "Análise de Futebol",
+      "description": "Análise exploratória e estatística da Premier League.",
+      "tabs": {
+        "correlations": "Correlações",
+        "inference": "Inferência estatística",
+        "montecarlo": "Simulador Monte Carlo"
+      },
+      "correlations": {
+        "theory": "### Correlações entre variáveis de jogo\nO **coeficiente de correlação de Pearson** (r) mede a relação linear entre duas variáveis e assume valores entre **−1 e 1**: perto de 1 ambas crescem juntas, perto de −1 uma sobe quando a outra desce, e perto de 0 quase não há relação linear. Cada célula cruza duas métricas calculadas por equipa e jogo. A escala de cor é **divergente** (azul = positiva, vermelho = negativa) para se ler bem sem depender do vermelho-verde. Altera o âmbito para comparar **toda a liga** com o subconjunto do **Top 6**.",
+        "scope_label": "Âmbito de análise",
+        "scope_all": "Toda a liga",
+        "scope_top6": "Top 6",
+        "heatmap_title": "Matriz de correlações",
+        "vars": {
+          "goals": "Golos",
+          "shots": "Remates",
+          "shots_on_target": "Remates à baliza",
+          "fouls": "Faltas",
+          "cards": "Cartões"
+        }
+      },
+      "inference": {
+        "theory": "### Existe a vantagem de jogar em casa?\nAplicamos um **teste t de Student (Welch)** unilateral para verificar se as equipas da casa rendem acima das visitantes:\n\n- **H₀**: a média da casa é igual à da equipa visitante.\n- **H₁**: a média da casa é **maior** do que a visitante.\n\nA **estatística t** mede quantos erros padrão separam as duas médias; o **p-valor** é a probabilidade de observar essa diferença (ou uma maior) se H₀ fosse verdadeira. Se o p-valor ficar abaixo de **α = 0.05** rejeitamos H₀. O gráfico mostra a **distribuição amostral** de cada média: quanto menos se sobrepõem as curvas, mais clara é a diferença.",
+        "metric_label": "Métrica do teste",
+        "metric_goals": "Golos (casa vs fora)",
+        "metric_shots": "Remates à baliza (casa vs fora)",
+        "stat_t": "Estatística t",
+        "stat_p": "p-valor",
+        "stat_mean_home": "Média casa",
+        "stat_mean_away": "Média fora",
+        "plot_title": "Distribuição amostral das médias",
+        "plot_density": "Densidade",
+        "plot_home": "Casa",
+        "plot_away": "Fora",
+        "story_significant": "**Veredicto.** Com uma estatística t = **{t_stat}** e um p-valor de **{p_value}** (bem abaixo de 0.05), rejeita-se a hipótese nula. A diferença em {metric} entre a média da casa (**{mean_home}**) e a visitante (**{mean_away}**) —cerca de **{diff}** de vantagem— **não se deve ao acaso**: fica estatisticamente confirmada a vantagem de jogar em casa em Riazor… quer dizer, na Premier. 🔵⚪",
+        "story_not_significant": "**Veredicto.** Com t = **{t_stat}** e um p-valor de **{p_value}** (acima de 0.05), **não** há evidência suficiente para rejeitar a hipótese nula. A diferença em {metric} entre casa (**{mean_home}**) e fora (**{mean_away}**), de **{diff}**, **poderia dever-se ao acaso**. Desta vez nem o fator Riazor salva o teste. 🔵⚪"
+      },
+      "montecarlo": {
+        "theory": "### Simulação Monte Carlo (modelo Dixon-Coles)\nO modelo **Dixon-Coles** atribui a cada equipa dois parâmetros estimados por **máxima verosimilhança**: a sua **força de ataque** e a sua **fragilidade defensiva**. Os golos de cada jogo são modelados com uma **distribuição de Poisson** cuja média depende do ataque de quem marca, da defesa de quem sofre e de um parâmetro de **vantagem de casa**.\n\nCom esses parâmetros **voltamos a jogar a época milhares de vezes**, gerando resultados aleatórios. Ao agregar todas as simulações obtemos, para cada equipa, a sua probabilidade de ser **campeã**, terminar no **Top 4** ou **descer**, separando assim a **qualidade** real da **sorte**.",
+        "run_button": "Simular época",
+        "nsims_label": "Número de simulações",
+        "placeholder": "Carrega em **Simular época** para gerar a classificação preditiva da liga.",
+        "col_pos": "Pos.",
+        "col_team": "Equipa",
+        "col_points": "Pontos médios",
+        "col_champion": "Campeã %",
+        "col_top4": "Top 4 %",
+        "col_relegation": "Descida %",
+        "note": "> Simulação baseada no modelo **Dixon-Coles**: cada equipa tem uma força de ataque e uma fragilidade defensiva estimadas por máxima verosimilhança, e jogar em casa multiplica os golos esperados por um fator de **{factor}**.",
+        "story": "Após **{n_sims}** épocas simuladas, **{champion}** sagra-se campeã em **{champion_prob}%** dos universos paralelos, com **{runner_up}** como principal perseguidor. No outro extremo, **{relegated}** é quem mais sofre: desce em **{relegation_prob}%** das simulações. A qualidade manda, mas a sorte tem sempre a última palavra."
+      }
+    },
+    "supervised": {
+      "title": "Aprendizagem Supervisionada",
+      "description": "Predição do resultado de cada jogo (1/X/2) com um motor de classificação supervisionada: validação cruzada estratificada e controlo estrito de fuga de dados.",
+      "theory": "Predizemos o **resultado de cada jogo** da Premier League 2022-23 (**1** casa · **X** empate · **2** fora) usando *apenas informação anterior ao apito inicial*. Como o resultado final é determinado pelo marcador e as restantes estatísticas são geradas **durante** o jogo, usá-las como entrada seria uma fuga de dados. Por isso, cada jogo é descrito pelas **médias móveis dos 5 jogos anteriores** de cada equipa (forma, golos, remates, cantos, faltas, cartões…) e os seus diferenciais. O motor segue um protocolo de avaliação rigoroso: **validação cruzada estratificada de 10 folds**, **padronização Z-score calculada exclusivamente com o treino de cada fold** (sem fuga) e **semente fixa** para total reprodutibilidade. Cada família de modelos é otimizada sobre uma **grelha de hiperparâmetros limitada e predefinida**.",
+      "algo_label": "Algoritmo",
+      "config_label": "Configuração",
+      "baseline_hint": "Sem hiperparâmetros: regressão logística por omissão (L2, C=1.0, lbfgs).",
+      "train_button": "Treinar modelo",
+      "algo": {
+        "baseline": "Regressão Logística (baseline)",
+        "ann": "Rede Neuronal (ANN)",
+        "svm": "SVM",
+        "tree": "Árvore de Decisão",
+        "knn": "k-NN",
+        "dome": "DoME (proxy RF)"
+      },
+      "kernel_linear": "Linear",
+      "kernel_poly": "Polinomial (grau 3)",
+      "kernel_rbf": "RBF",
+      "opt_depth": "Profundidade {n}",
+      "opt_k": "k = {n}",
+      "opt_nodes": "{n} nós",
+      "kpi_accuracy": "Accuracy médio",
+      "kpi_error": "Erro médio",
+      "kpi_f1": "F1-Score (macro)",
+      "confusion_title": "Matriz de confusão",
+      "confusion_count": "Jogos",
+      "axis_real": "Real",
+      "axis_pred": "Prevista",
+      "classes": {
+        "home": "1 · Casa",
+        "draw": "X · Empate",
+        "away": "2 · Fora"
+      },
+      "robustness_title": "Robustez estatística",
+      "robustness_intro": "Com apenas 10 valores de accuracy (um por fold) comparamos modelos com rigor. **Shapiro-Wilk** testa se esses 10 valores seguem uma distribuição normal (*p > 0,05* → normal). O teste de **Wilcoxon** de postos com sinal compara dois modelos aos pares sobre os **mesmos folds**: se *p ≤ 0,05* a diferença é significativa; caso contrário, são estatisticamente equivalentes e entra em jogo a **Navalha de Ockham**.",
+      "shapiro_label": "Shapiro-Wilk (normalidade)",
+      "compare_label": "Comparar estatisticamente com…",
+      "compare_placeholder": "Escolhe um rival…",
+      "compare_prompt": "Escolhe um rival para o teste",
+      "train_first": "Treina um modelo primeiro",
+      "wilcoxon_label": "Wilcoxon vs {rival}",
+      "wilcoxon_label_idle": "Wilcoxon (comparação aos pares)",
+      "verdict_normal": "Normal",
+      "verdict_not_normal": "Não normal",
+      "verdict_significant": "Diferença Significativa",
+      "verdict_equivalent": "Estatisticamente Equivalentes",
+      "param_depth": "a profundidade",
+      "param_nodes": "o nº de nós",
+      "param_topology": "a topologia",
+      "story_intro": "**{model}** atinge um **accuracy médio de {accuracy}%** (erro {error}%, F1 macro {f1}) em validação cruzada de 10 folds. Como referência, acertar sempre na classe maioritária daria {baseline}%. No futebol o teto de previsibilidade é baixo, por isso estes valores são os esperados: o resultado de um jogo tem uma componente aleatória enorme.",
+      "story_overfit": "⚠️ **Sobreajuste detetado.** A melhor configuração foi **{best}** ({best_acc}%); ao aumentar {param} até **{complex}** o acerto cai para {complex_acc}%. O modelo começa a **memorizar ruído** em vez de aprender o padrão geral — a *maldição da dimensionalidade* em ação: mais complexidade não implica melhor generalização.",
+      "story_confusion": "**Leitura da matriz:** o erro mais frequente são {n_err} jogos do tipo **{real_cls}** previstos como **{pred_cls}**. A classe com pior acerto é **{worst_cls}**; na prática os **empates** são os mais difíceis de antecipar porque quase não deixam rasto na forma anterior das equipas.",
+      "story_significant": "O teste de **Wilcoxon (p = {p})** indica uma **diferença significativa**: **{better}** supera de forma consistente **{worse}** ao longo dos 10 folds. A melhoria não é fruto do acaso.",
+      "story_equivalent": "**Wilcoxon (p = {p})**: não há diferença significativa entre **{model_a}** e **{model_b}**. Para este problema rendem de forma estatisticamente equivalente.",
+      "story_ockham": "**Navalha de Ockham.** Com **Wilcoxon p = {p}** não se observa diferença significativa entre **{complex}** e **{simple}**. Perante um desempenho equivalente, convém ficar com **{simple}**: mais simples, interpretável e barato de treinar do que **{complex}**.",
+      "export_report": "Exportar Relatório"
+    },
+    "unsupervised": {
+      "title": "Aprendizagem Não Supervisionada",
+      "description": "Descoberta de estilos de jogo (perfis) das 20 equipas através de PCA e clustering.",
+      "theory": "Aqui não há rótulos: deixamos os dados revelarem **estilos de jogo**. Resumimos a época de cada uma das 20 equipas em **5 KPIs avançados** — volume ofensivo (remates à baliza), eficiência (golos por remate à baliza), solidez defensiva, controlo do jogo (cantos) e agressividade (faltas + cartões) — padronizamo-los com **Z-score** e aplicamos **experimentação exaustiva**: **PCA** para ver quanta informação cabe em poucas dimensões, e três famílias de *clustering* (**K-Means**, **hierárquico** e **SOM**) avaliadas com o **Silhouette Score**. O scatter projeta as equipas sobre as 2 primeiras componentes principais; o radar mostra o ADN de cada perfil.",
+      "algo_label": "Algoritmo",
+      "run_button": "Executar agrupamento",
+      "k_label": "Número de clusters (k)",
+      "method_label": "Método de ligação",
+      "grid_label": "Grelha SOM",
+      "k_option": "k = {n}",
+      "algo": {
+        "kmeans": "K-Means",
+        "hierarchical": "Hierárquico",
+        "som": "SOM (Self-Organizing Map)"
+      },
+      "method": {
+        "ward": "Ward",
+        "complete": "Completo (complete)",
+        "average": "Média (average)",
+        "single": "Simples (single)",
+        "centroid": "Centroide (centroid)"
+      },
+      "scatter_title": "Mapa de equipas (PCA 2D)",
+      "radar_title": "ADN dos perfis (KPIs padronizados)",
+      "pc_axis": "PC{n} · {pct}% var",
+      "pca_panel_title": "Rigor académico · componentes PCA por variância explicada",
+      "pca_threshold": "{pct}% var",
+      "pca_components_unit": "componentes",
+      "silhouette_label": "Silhouette Score",
+      "silhouette_na": "n/a",
+      "run_prompt": "Configura um algoritmo e carrega em Executar para descobrir os perfis de jogo.",
+      "run_prompt_badge": "Por executar",
+      "cluster_name": "Perfil {n}",
+      "kpi": {
+        "volume": "volume ofensivo",
+        "efficiency": "eficiência",
+        "solidity": "solidez defensiva",
+        "control": "controlo do jogo",
+        "aggressiveness": "agressividade"
+      },
+      "sil_verdict": {
+        "strong": "Forte",
+        "reasonable": "Razoável",
+        "weak": "Fraca",
+        "poor": "Pobre",
+        "na": "N/A"
+      },
+      "quality_phrase": {
+        "strong": "uma estrutura forte e bem separada",
+        "reasonable": "uma estrutura razoável",
+        "weak": "uma estrutura fraca, com sobreposição entre perfis",
+        "poor": "um agrupamento frouxo: os perfis sobrepõem-se bastante (algo natural com apenas 20 equipas e estilos que variam de forma contínua)",
+        "na": "não definido"
+      },
+      "story_dna_header": "**ADN dos perfis:**",
+      "story_intro": "**{algo} · {config}** divide as 20 equipas em **{n} perfis de jogo**.",
+      "story_silhouette": "Qualidade do agrupamento — **Silhouette = {sil}**: {quality}. O Silhouette mede quão compactos e separados ficam os grupos (1 = perfeito · 0 = sobrepostos · negativo = mal atribuídos).",
+      "story_silhouette_na": "Com esta grelha o SOM atribui quase uma equipa por neurónio (**sobre-segmentação**): o Silhouette não está definido. Reduz o tamanho da grelha (p. ex. 4×4) para obter perfis agrupáveis — é a lição do método: uma grelha demasiado grande para apenas 20 equipas não generaliza.",
+      "story_cluster_both": "**{name}** ({size} equipas · {teams}) — destaca-se em **{high}** e fica aquém em **{low}**.",
+      "story_cluster_high": "**{name}** ({size} equipas · {teams}) — destaca-se em **{high}**.",
+      "story_cluster_low": "**{name}** ({size} equipas · {teams}) — défice em **{low}**.",
+      "story_cluster_balanced": "**{name}** ({size} equipas · {teams}) — perfil equilibrado, sem traços extremos.",
+      "export_report": "Exportar Relatório"
+    },
+    "knowledge_hub": {
+      "title": "DataMill Analytics",
+      "subtitle": "Whitepaper técnico do motor analítico",
+      "lead": "Documentação técnica do produto: do dado bruto à **predição de resultados** e à **descoberta de estilos de jogo**. Arquitetura, metodologia e stack do motor.",
+      "stack_languages": "Linguagem",
+      "stack_frontend": "Front-end & Reatividade",
+      "stack_ml": "Motor de Machine Learning",
+      "stack_i18n": "Internacionalização & Acessibilidade",
+      "sec1_title": "1 · O Motor Analítico",
+      "sec1_body": "**DataMill Analytics** é um motor analítico de futebol profissional que aplica *machine learning exaustivo* à Premier League 2022-23 com um duplo objetivo: **prever o resultado dos jogos** (aprendizagem supervisionada) e **descobrir estilos de jogo** das equipas (aprendizagem não supervisionada).\n\nCada módulo replica uma metodologia de investigação rigorosa —procura em grelha fechada, validação cruzada e teste estatístico— e expõe-na numa interface reativa, multilíngue e acessível. Não é uma demo: é um *pipeline* reproduzível de ponta a ponta, com a matemática isolada do front-end e os resultados em cache para uma exploração fluida.",
+      "sec2_title": "2 · Arquitetura Supervisionada — Match Prediction",
+      "sec2_body": "#### Prevenção de fuga de dados\nO resultado final (FTR) é determinado pelo marcador, e as estatísticas do jogo (remates, cantos, faltas…) são geradas **durante** o jogo. Usá-las como entrada seria uma fuga catastrófica. Por isso, para cada jogo calculam-se as **médias móveis dos 5 jogos anteriores** de cada equipa (forma recente, golos, remates à baliza, cantos, cartões…) e os seus diferenciais. A informação intra-jogo apenas alimenta o histórico; **nunca** entra como variável preditora.\n\n#### Algoritmos avaliados\nSeis famílias treinadas através de **procura em grelha fechada** (sem intervalos abertos):\n- **Baseline** — Regressão Logística (L2).\n- **ANN** — 8 topologias de 1-2 camadas ocultas.\n- **SVM** — 8 configurações (linear, polinomial g=3 e RBF).\n- **Árvores de Decisão** — profundidade 2 a 7.\n- **k-NN** — k ímpar de 1 a 11.\n- **DoME (proxy)** — Random Forest limitado pelo nº de nós.\n\n#### Rigor estatístico\n- **Validação cruzada estratificada de 10 folds**, com semente fixa para reprodutibilidade total.\n- **Padronização Z-score estrita por fold**: média e desvio padrão são calculados apenas com o *train* de cada partição (zero fuga).\n- **Teste de Shapiro-Wilk** sobre os 10 accuracies (normalidade) e **Wilcoxon de postos com sinal** para a comparação aos pares. Quando dois modelos são estatisticamente equivalentes, aplica-se a **Navalha de Ockham**: favorece-se o mais simples e interpretável.",
+      "sec3_title": "3 · Arquitetura Não Supervisionada — Team Profiling",
+      "sec3_body": "O módulo de *Team Profiling* resume a época de cada equipa em **5 KPIs avançados** —volume ofensivo, eficiência, solidez defensiva, controlo do jogo e agressividade— e padroniza-os com Z-score.\n\n#### Pipeline\n- **PCA** — análise de componentes principais: reporta quantas componentes são necessárias para explicar de 70 a 95 % da variância, e projeta as equipas em 2D (PC1/PC2) para a visualização.\n- **K-Means** — k de 2 a 7.\n- **Clustering hierárquico** — via `scipy.cluster.hierarchy` (`linkage` + `fcluster`), com os métodos *ward, complete, average, single* e **centroide**.\n- **Redes SOM** — *Self-Organizing Maps* (`minisom`) sobre 6 grelhas simétricas de alta dimensionalidade, de 4×4 a 10×10.\n\n#### Avaliação\nA qualidade de cada agrupamento é medida com o **Silhouette Score**. O sistema gere explicitamente a **sobre-segmentação**: quando uma grelha SOM grande atribui quase uma equipa por neurónio, o Silhouette deixa de estar definido e é reportado como tal, em vez de inventar um valor.",
+      "sec4_title": "4 · Stack Tecnológico & UI/UX",
+      "sec4_body": "O núcleo do software combina um *back-end* matemático robusto com um *front-end* totalmente reativo:\n\n- **Python** como linguagem base.\n- **Dash** e **Plotly** para a interface reativa e as visualizações interativas (scatter PCA, radares, *heatmaps*, simulações Monte Carlo).\n- **scikit-learn**, **SciPy** e **MiniSom** como motor de *machine learning* (modelos supervisionados, PCA, clustering hierárquico e SOM).\n\n**Arquitetura i18n custom.** O suporte multilíngue é **nativo**, não um remendo: um *tradutor* próprio com chaves hierárquicas, *fallback* em cascata e formatação dinâmica serve toda a aplicação em **6 idiomas** sem dependências externas. A interface segue ainda princípios de acessibilidade e uma **paleta segura para daltonismo** (CVD-safe).",
+      "sec5_title": "5 · Core Team",
+      "sec5_body": "**Brais Muiño Otero** — *Lead Data Scientist & Engineer*\n\nConceção, desenvolvimento e implementação integral do projeto: engenharia de dados, motor de *machine learning*, arquitetura da aplicação, visualização e internacionalização.\n\n🔗 **GitHub:** [github.com/brais-muino-otero](https://github.com/brais-muino-otero)  ·  **Demonstração ao vivo:** [huggingface.co/spaces/Braizito/datamill-analytics](https://huggingface.co/spaces/Braizito/datamill-analytics)"
+    }
+  },
+  "common": {
+    "under_construction": "🚧 Página em construção",
+    "not_found": "A rota «{path}» não existe.",
+    "go_home": "Voltar ao início"
+  }
+}

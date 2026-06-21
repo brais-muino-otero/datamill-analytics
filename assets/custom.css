@@ -1,0 +1,388 @@
+/* ==========================================================================
+   custom.css  -  Estilos personalizados SOBRE el tema DARKLY de Bootstrap.
+   Dash sirve automaticamente todo lo que haya en la carpeta /assets.
+   ========================================================================== */
+
+:root {
+    /* Ancho del menu lateral, centralizado como variable CSS reutilizable. */
+    --sidebar-width: 17rem;
+}
+
+/* --------------------------------------------------------------------------
+   Menu lateral (sidebar) fijo a la izquierda.
+   -------------------------------------------------------------------------- */
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: var(--sidebar-width);
+    padding: 1.5rem 1rem;
+    background-color: #2b2f33;        /* Algo mas claro que el fondo DARKLY (#222) */
+    border-right: 1px solid #444;
+    overflow-y: auto;                 /* Scroll propio si hay muchos enlaces */
+}
+
+.sidebar-brand {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #ffffff;
+    margin-bottom: 0;
+}
+
+.sidebar-subtitle {
+    font-size: 0.85rem;
+    color: #adb5bd;
+    margin-bottom: 0.5rem;
+}
+
+/* Selector de idioma */
+.language-selector-wrapper {
+    margin-top: 0.5rem;
+}
+
+.language-label {
+    display: block;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #adb5bd;
+    margin-bottom: 0.35rem;
+}
+
+/* --------------------------------------------------------------------------
+   Area de contenido principal (desplazada a la derecha del sidebar).
+   -------------------------------------------------------------------------- */
+.content {
+    margin-left: var(--sidebar-width);
+    padding: 2rem 2.5rem;
+}
+
+/* --------------------------------------------------------------------------
+   Suelo de calidad / accesibilidad.
+   -------------------------------------------------------------------------- */
+/* Foco visible por teclado (no eliminar outlines sin reemplazo). */
+a:focus-visible,
+.nav-link:focus-visible,
+.form-select:focus-visible {
+    outline: 2px solid #56B4E9;       /* azul CVD-safe de la paleta */
+    outline-offset: 2px;
+}
+
+/* Respeta la preferencia del sistema de reducir animaciones. */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.001ms !important;
+        transition-duration: 0.001ms !important;
+    }
+}
+
+/* --------------------------------------------------------------------------
+   Responsive: en pantallas pequenas el sidebar pasa a barra superior.
+   -------------------------------------------------------------------------- */
+@media (max-width: 768px) {
+    .sidebar {
+        position: static;
+        width: 100%;
+        height: auto;
+        border-right: none;
+        border-bottom: 1px solid #444;
+    }
+    .content {
+        margin-left: 0;
+        padding: 1.5rem;
+    }
+}
+
+/* ==========================================================================
+   Pagina "Futbol Analytics": pestanas, storytelling, tarjetas KPI y tabla MC.
+   Construido sobre DARKLY; acentos de la paleta Okabe-Ito (CVD-safe).
+   ========================================================================== */
+
+/* Cuerpo de cada pestana: un respiro de aire bajo la barra de tabs. */
+.tab-body {
+    padding-top: 1.5rem;
+}
+
+/* --------------------------------------------------------------------------
+   Data storytelling (dcc.Markdown): teoria estatica e interpretacion dinamica.
+   -------------------------------------------------------------------------- */
+.theory-block {
+    background-color: #2b2f33;            /* mismo gris que el sidebar */
+    border-left: 4px solid #56B4E9;       /* azul cielo CVD-safe */
+    border-radius: 0 0.4rem 0.4rem 0;
+    padding: 1rem 1.25rem;
+    margin-bottom: 1.5rem;
+    color: #dee2e6;
+}
+.theory-block h3 {
+    font-size: 1.1rem;
+    margin-top: 0;
+    color: #ffffff;
+}
+.theory-block ul {
+    margin-bottom: 0;
+}
+
+/* Interpretacion en tiempo real del resultado: se distingue de la teoria. */
+.story-block {
+    background-color: rgba(86, 180, 233, 0.08);
+    border: 1px solid rgba(86, 180, 233, 0.35);
+    border-radius: 0.4rem;
+    padding: 1rem 1.25rem;
+    margin-top: 1.5rem;
+    color: #e9ecef;
+    line-height: 1.55;
+}
+.story-block:empty {           /* sin texto aun -> no pintamos una caja vacia */
+    display: none;
+}
+
+/* --------------------------------------------------------------------------
+   Controles (etiquetas de filtros / desplegables).
+   -------------------------------------------------------------------------- */
+.control-label {
+    display: block;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #adb5bd;
+    margin-bottom: 0.4rem;
+}
+.control-dropdown {
+    max-width: 22rem;
+}
+
+/* --------------------------------------------------------------------------
+   Tarjetas KPI del contraste t (t, p-valor, medias).
+   -------------------------------------------------------------------------- */
+.stat-card {
+    background-color: #2b2f33;
+    border: 1px solid #444;
+    border-radius: 0.5rem;
+    height: 100%;
+    text-align: center;
+}
+.stat-card .card-body {
+    padding: 0.85rem 0.5rem;
+}
+.stat-label {
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: #adb5bd;
+    margin-bottom: 0.25rem;
+}
+.stat-value {
+    font-size: 1.45rem;
+    font-weight: 700;
+    color: #ffffff;
+    font-variant-numeric: tabular-nums;   /* cifras de ancho fijo: no "bailan" */
+}
+
+/* --------------------------------------------------------------------------
+   Simulador Monte Carlo: boton, nota y tabla de clasificacion predictiva.
+   -------------------------------------------------------------------------- */
+.mc-run-btn {
+    font-weight: 600;
+}
+
+.placeholder-block {
+    color: #adb5bd;
+    font-style: italic;
+    padding: 1rem 0;
+}
+
+.mc-note {
+    color: #ced4da;
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+}
+.mc-note blockquote,
+.mc-note > p {
+    margin-bottom: 0;
+}
+
+.mc-table {
+    font-variant-numeric: tabular-nums;   /* columnas numericas alineadas */
+}
+.mc-table thead th {
+    border-bottom: 2px solid #56B4E9;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    color: #adb5bd;
+}
+/* Columnas numericas a la derecha; equipo a la izquierda y un poco mas marcado. */
+.mc-table .num {
+    text-align: right;
+}
+.mc-table .team-cell {
+    font-weight: 600;
+    color: #f8f9fa;
+}
+/* Probabilidades destacadas en color CVD-safe: campeon (azul) y descenso (rojo). */
+.mc-table .pct-champion {
+    color: #56B4E9;
+    font-weight: 600;
+}
+.mc-table .pct-relegation {
+    color: #D55E00;
+    font-weight: 600;
+}
+
+/* ============================================================ */
+/*  Pagina: Aprendizaje Supervisado                             */
+/* ============================================================ */
+
+/* Subtexto de las tarjetas KPI (± desviacion tipica). */
+.stat-sub {
+    font-size: 0.85rem;
+    color: var(--bs-secondary-color, #adb5bd);
+    margin-top: 0.15rem;
+}
+
+/* Tarjeta contenedora de los controles del modelo. */
+.controls-card {
+    height: 100%;
+}
+
+/* Nota informativa bajo el selector de configuracion (p.ej. baseline). */
+.config-hint {
+    font-size: 0.85rem;
+    font-style: italic;
+    color: var(--bs-secondary-color, #adb5bd);
+}
+
+/* Badge de veredicto (Normal / Significativo / Equivalente...). */
+.verdict-badge {
+    font-size: 0.8rem;
+    font-weight: 600;
+    white-space: normal;
+}
+
+/* ============================================================ */
+/*  Pagina: Aprendizaje No Supervisado                          */
+/* ============================================================ */
+
+/* Lista compacta del reporte PCA (umbral -> nº de componentes). */
+.pca-list {
+    list-style: none;
+    padding-left: 0;
+    margin: 0.3rem 0 0 0;
+    font-size: 0.9rem;
+}
+.pca-list li {
+    padding: 0.1rem 0;
+    color: var(--bs-body-color, #dee2e6);
+}
+
+/* ============================================================ */
+/*  Exportacion a PDF (window.print) + impresion limpia         */
+/* ============================================================ */
+.export-btn {
+    font-weight: 600;
+    letter-spacing: 0.02em;
+}
+
+@media print {
+    /* 1) Ocultar navegacion, botones y cualquier elemento .no-print */
+    .sidebar,
+    .no-print,
+    .export-btn,
+    .mc-run-btn {
+        display: none !important;
+    }
+
+    /* 2) Contenido a ancho COMPLETO (sin margen reservado para el sidebar) */
+    .content {
+        margin-left: 0 !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        padding: 1rem !important;
+    }
+
+    /* 3) Forzar fondos BLANCOS y tinta oscura para el PDF */
+    html,
+    body {
+        background: #ffffff !important;
+        color: #000000 !important;
+    }
+    .card,
+    .stat-card,
+    .theory-block,
+    .story-block,
+    .accordion,
+    .accordion-item,
+    .accordion-button,
+    .accordion-body {
+        background: #ffffff !important;
+        color: #000000 !important;
+        border: 1px solid #cccccc !important;
+        box-shadow: none !important;
+    }
+    a { color: #000000 !important; text-decoration: none !important; }
+
+    /* Texto de los graficos Plotly legible sobre fondo blanco */
+    .js-plotly-plot text { fill: #000000 !important; }
+
+    /* Evitar cortes feos de tarjetas/graficos entre paginas */
+    .card,
+    .stat-card,
+    .js-plotly-plot,
+    .accordion-item {
+        page-break-inside: avoid;
+        break-inside: avoid;
+    }
+
+    /* Margenes del documento impreso */
+    @page { margin: 1.5cm; }
+}
+
+/* ============================================================ */
+/*  dcc.Dropdown (react-select) — tema oscuro legible           */
+/*  Arregla el texto invisible (blanco sobre blanco) al elegir  */
+/* ============================================================ */
+/* --- react-select v1 (.Select-*) --- */
+.Select-control {
+    background-color: #2b2f33 !important;
+    border: 1px solid #444 !important;
+}
+.Select-control:hover { border-color: #56B4E9 !important; }
+.Select-value-label,
+.Select--single > .Select-control .Select-value .Select-value-label,
+.Select-value .Select-value-label {
+    color: #e9ecef !important;            /* opcion seleccionada: SIEMPRE legible */
+}
+.Select-placeholder { color: #adb5bd !important; }
+.Select-input > input { color: #e9ecef !important; }
+.Select-menu-outer,
+.Select-menu {
+    background-color: #2b2f33 !important;
+    border: 1px solid #444 !important;
+}
+.Select-option {
+    background-color: #2b2f33 !important;
+    color: #e9ecef !important;
+}
+.Select-option.is-focused { background-color: #3a3f44 !important; }
+.Select-option.is-selected { background-color: #0d6efd !important; color: #ffffff !important; }
+.Select-arrow { border-color: #adb5bd transparent transparent !important; }
+.is-open .Select-arrow { border-color: transparent transparent #adb5bd !important; }
+.Select-clear { color: #adb5bd !important; }
+
+/* --- react-select v5 (.Select__*) por si la version migro --- */
+.Select__control {
+    background-color: #2b2f33 !important;
+    border: 1px solid #444 !important;
+}
+.Select__single-value,
+.Select__input,
+.Select__input-container { color: #e9ecef !important; }
+.Select__placeholder { color: #adb5bd !important; }
+.Select__menu { background-color: #2b2f33 !important; border: 1px solid #444 !important; }
+.Select__option { background-color: #2b2f33 !important; color: #e9ecef !important; }
+.Select__option--is-focused { background-color: #3a3f44 !important; }
+.Select__option--is-selected { background-color: #0d6efd !important; color: #ffffff !important; }
+.Select__indicator-separator { background-color: #444 !important; }
+.Select__single-value { color: #e9ecef !important; }

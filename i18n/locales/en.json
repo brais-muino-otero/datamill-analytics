@@ -1,0 +1,215 @@
+{
+  "app": {
+    "subtitle": "Premier League analytics & prediction"
+  },
+  "nav": {
+    "football_analytics": "Football Analytics",
+    "supervised": "Supervised Learning",
+    "unsupervised": "Unsupervised Learning",
+    "knowledge_hub": "Knowledge Hub"
+  },
+  "language": {
+    "label": "Language"
+  },
+  "pages": {
+    "football_analytics": {
+      "title": "Football Analytics",
+      "description": "Exploratory and statistical analysis of the Premier League.",
+      "tabs": {
+        "correlations": "Correlations",
+        "inference": "Statistical inference",
+        "montecarlo": "Monte Carlo simulator"
+      },
+      "correlations": {
+        "theory": "### Correlations between match metrics\nThe **Pearson correlation coefficient** (r) measures the linear relationship between two variables and ranges from **−1 to 1**: near 1 both grow together, near −1 one rises as the other falls, and near 0 there is barely any linear relationship. Each cell crosses two metrics computed per team and match. The color scale is **diverging** (blue = positive, red = negative) so it reads well without relying on red-green. Switch the scope to compare **the whole league** with the **Top 6** subset.",
+        "scope_label": "Analysis scope",
+        "scope_all": "Whole league",
+        "scope_top6": "Top 6",
+        "heatmap_title": "Correlation matrix",
+        "vars": {
+          "goals": "Goals",
+          "shots": "Shots",
+          "shots_on_target": "Shots on target",
+          "fouls": "Fouls",
+          "cards": "Cards"
+        }
+      },
+      "inference": {
+        "theory": "### Is there a home advantage?\nWe apply a one-sided **Student's t-test (Welch)** to check whether home teams outperform away teams:\n\n- **H₀**: the home mean equals the away mean.\n- **H₁**: the home mean is **greater** than the away mean.\n\nThe **t-statistic** measures how many standard errors separate the two means; the **p-value** is the probability of observing that difference (or a larger one) if H₀ were true. If the p-value falls below **α = 0.05** we reject H₀. The chart shows the **sampling distribution** of each mean: the less the bell curves overlap, the clearer the difference.",
+        "metric_label": "Test metric",
+        "metric_goals": "Goals (home vs away)",
+        "metric_shots": "Shots on target (home vs away)",
+        "stat_t": "t-statistic",
+        "stat_p": "p-value",
+        "stat_mean_home": "Home mean",
+        "stat_mean_away": "Away mean",
+        "plot_title": "Sampling distribution of the means",
+        "plot_density": "Density",
+        "plot_home": "Home",
+        "plot_away": "Away",
+        "story_significant": "**Verdict.** With a t-statistic = **{t_stat}** and a p-value of **{p_value}** (well below 0.05), the null hypothesis is rejected. The difference in {metric} between the home mean (**{mean_home}**) and the away mean (**{mean_away}**) —about **{diff}** of advantage— **is not due to chance**: the home advantage is statistically confirmed, at Riazor… I mean, in the Premier. 🔵⚪",
+        "story_not_significant": "**Verdict.** With t = **{t_stat}** and a p-value of **{p_value}** (above 0.05), there is **not** enough evidence to reject the null hypothesis. The difference in {metric} between home (**{mean_home}**) and away (**{mean_away}**), of **{diff}**, **could be due to chance**. This time not even the Riazor factor saves the test. 🔵⚪"
+      },
+      "montecarlo": {
+        "theory": "### Monte Carlo simulation (Dixon-Coles model)\nThe **Dixon-Coles** model assigns each team two parameters estimated by **maximum likelihood**: its **attacking strength** and its **defensive weakness**. The goals in each match are modeled with a **Poisson distribution** whose mean depends on the attack of the scorer, the defense of the conceder and a **home-advantage** parameter.\n\nWith those parameters we **replay the season thousands of times**, generating random scorelines. Aggregating all simulations yields, for each team, its probability of being **champion**, finishing in the **Top 4** or being **relegated**, thereby separating real **quality** from **luck**.",
+        "run_button": "Simulate season",
+        "nsims_label": "Number of simulations",
+        "placeholder": "Press **Simulate season** to generate the league's predictive table.",
+        "col_pos": "Pos.",
+        "col_team": "Team",
+        "col_points": "Avg points",
+        "col_champion": "Champion %",
+        "col_top4": "Top 4 %",
+        "col_relegation": "Relegation %",
+        "note": "> Simulation based on the **Dixon-Coles** model: each team has an attacking strength and a defensive weakness estimated by maximum likelihood, and playing at home multiplies the expected goals by a factor of **{factor}**.",
+        "story": "After **{n_sims}** simulated seasons, **{champion}** is crowned champion in **{champion_prob}%** of the parallel universes, with **{runner_up}** as the main challenger. At the other end, **{relegated}** suffers the most: relegated in **{relegation_prob}%** of the simulations. Quality rules, but luck always has the final word."
+      }
+    },
+    "supervised": {
+      "title": "Supervised Learning",
+      "description": "Match outcome prediction (1/X/2) with a supervised classification engine: stratified cross-validation and strict data-leakage control.",
+      "theory": "We predict the **outcome of each match** in the 2022-23 Premier League (**1** home · **X** draw · **2** away) using *only pre-kickoff information*. Since the final scoreline determines the result and the remaining statistics are generated **during** the game, using them as input would be data leakage. That is why each match is described by the **rolling averages of each team's 5 previous matches** (form, goals, shots, corners, fouls, cards…) and their differentials. The engine follows a rigorous evaluation protocol: **stratified 10-fold cross-validation**, **Z-score standardization computed exclusively on each fold's training set** (no leakage) and a **fixed seed** for full reproducibility. Each model family is tuned over a **bounded, predefined hyperparameter grid**.",
+      "algo_label": "Algorithm",
+      "config_label": "Configuration",
+      "baseline_hint": "No hyperparameters: default logistic regression (L2, C=1.0, lbfgs).",
+      "train_button": "Train model",
+      "algo": {
+        "baseline": "Logistic Regression (baseline)",
+        "ann": "Neural Network (ANN)",
+        "svm": "SVM",
+        "tree": "Decision Tree",
+        "knn": "k-NN",
+        "dome": "DoME (proxy RF)"
+      },
+      "kernel_linear": "Linear",
+      "kernel_poly": "Polynomial (degree 3)",
+      "kernel_rbf": "RBF",
+      "opt_depth": "Depth {n}",
+      "opt_k": "k = {n}",
+      "opt_nodes": "{n} nodes",
+      "kpi_accuracy": "Mean accuracy",
+      "kpi_error": "Mean error",
+      "kpi_f1": "F1-Score (macro)",
+      "confusion_title": "Confusion matrix",
+      "confusion_count": "Matches",
+      "axis_real": "Actual",
+      "axis_pred": "Predicted",
+      "classes": {
+        "home": "1 · Home",
+        "draw": "X · Draw",
+        "away": "2 · Away"
+      },
+      "robustness_title": "Statistical robustness",
+      "robustness_intro": "With just 10 accuracy values (one per fold) we compare models rigorously. **Shapiro-Wilk** tests whether those 10 values follow a normal distribution (*p > 0.05* → normal). The **Wilcoxon** signed-rank test compares two models pairwise over the **same folds**: if *p ≤ 0.05* the difference is significant; otherwise they are statistically equivalent and **Occam's Razor** comes into play.",
+      "shapiro_label": "Shapiro-Wilk (normality)",
+      "compare_label": "Compare statistically against…",
+      "compare_placeholder": "Choose a rival…",
+      "compare_prompt": "Choose a rival for the test",
+      "train_first": "Train a model first",
+      "wilcoxon_label": "Wilcoxon vs {rival}",
+      "wilcoxon_label_idle": "Wilcoxon (pairwise comparison)",
+      "verdict_normal": "Normal",
+      "verdict_not_normal": "Not normal",
+      "verdict_significant": "Significant Difference",
+      "verdict_equivalent": "Statistically Equivalent",
+      "param_depth": "the depth",
+      "param_nodes": "the number of nodes",
+      "param_topology": "the topology",
+      "story_intro": "**{model}** reaches a **mean accuracy of {accuracy}%** (error {error}%, macro F1 {f1}) under 10-fold cross-validation. As a reference, always predicting the majority class would give {baseline}%. In football the predictability ceiling is low, so these values are the expected ones: a match result has a huge random component.",
+      "story_overfit": "⚠️ **Overfitting detected.** The best configuration was **{best}** ({best_acc}%); by increasing {param} to **{complex}** accuracy drops to {complex_acc}%. The model starts to **memorize noise** instead of learning the general pattern — the *curse of dimensionality* in action: more complexity does not imply better generalization.",
+      "story_confusion": "**Reading the matrix:** the most frequent error is {n_err} matches of type **{real_cls}** predicted as **{pred_cls}**. The class with the worst accuracy is **{worst_cls}**; in practice **draws** are the hardest to anticipate because they barely leave a trace in teams' prior form.",
+      "story_significant": "The **Wilcoxon test (p = {p})** indicates a **significant difference**: **{better}** consistently outperforms **{worse}** across the 10 folds. The improvement is not down to chance.",
+      "story_equivalent": "**Wilcoxon (p = {p})**: there is no significant difference between **{model_a}** and **{model_b}**. For this problem they perform statistically equivalently.",
+      "story_ockham": "**Occam's Razor.** With **Wilcoxon p = {p}** there is no significant difference between **{complex}** and **{simple}**. Given equivalent performance, it is best to keep **{simple}**: simpler, more interpretable and cheaper to train than **{complex}**.",
+      "export_report": "Export Report"
+    },
+    "unsupervised": {
+      "title": "Unsupervised Learning",
+      "description": "Discovering playing styles (profiles) of the 20 teams through PCA and clustering.",
+      "theory": "There are no labels here: we let the data reveal **playing styles**. We summarize each of the 20 teams' season into **5 advanced KPIs** — attacking volume (shots on target), efficiency (goals per shot on target), defensive solidity, game control (corners) and aggressiveness (fouls + cards) — standardize them with **Z-score** and run **exhaustive experimentation**: **PCA** to see how much information fits into few dimensions, and three *clustering* families (**K-Means**, **hierarchical** and **SOM**) evaluated with the **Silhouette Score**. The scatter projects the teams onto the first 2 principal components; the radar shows each profile's DNA.",
+      "algo_label": "Algorithm",
+      "run_button": "Run clustering",
+      "k_label": "Number of clusters (k)",
+      "method_label": "Linkage method",
+      "grid_label": "SOM grid",
+      "k_option": "k = {n}",
+      "algo": {
+        "kmeans": "K-Means",
+        "hierarchical": "Hierarchical",
+        "som": "SOM (Self-Organizing Map)"
+      },
+      "method": {
+        "ward": "Ward",
+        "complete": "Complete",
+        "average": "Average",
+        "single": "Single",
+        "centroid": "Centroid"
+      },
+      "scatter_title": "Team map (PCA 2D)",
+      "radar_title": "Profile DNA (standardized KPIs)",
+      "pc_axis": "PC{n} · {pct}% var",
+      "pca_panel_title": "Academic rigor · PCA components by explained variance",
+      "pca_threshold": "{pct}% var",
+      "pca_components_unit": "components",
+      "silhouette_label": "Silhouette Score",
+      "silhouette_na": "n/a",
+      "run_prompt": "Configure an algorithm and press Run to discover the playing profiles.",
+      "run_prompt_badge": "Not run yet",
+      "cluster_name": "Profile {n}",
+      "kpi": {
+        "volume": "attacking volume",
+        "efficiency": "efficiency",
+        "solidity": "defensive solidity",
+        "control": "game control",
+        "aggressiveness": "aggressiveness"
+      },
+      "sil_verdict": {
+        "strong": "Strong",
+        "reasonable": "Reasonable",
+        "weak": "Weak",
+        "poor": "Poor",
+        "na": "N/A"
+      },
+      "quality_phrase": {
+        "strong": "a strong, well-separated structure",
+        "reasonable": "a reasonable structure",
+        "weak": "a weak structure, with overlap between profiles",
+        "poor": "a loose grouping: the profiles overlap quite a bit (natural with only 20 teams and continuously varying styles)",
+        "na": "undefined"
+      },
+      "story_dna_header": "**Profile DNA:**",
+      "story_intro": "**{algo} · {config}** splits the 20 teams into **{n} playing profiles**.",
+      "story_silhouette": "Clustering quality — **Silhouette = {sil}**: {quality}. The Silhouette measures how compact and well-separated the groups are (1 = perfect · 0 = overlapping · negative = misassigned).",
+      "story_silhouette_na": "With this grid the SOM assigns almost one team per neuron (**over-segmentation**): the Silhouette is undefined. Reduce the grid size (e.g. 4×4) to obtain groupable profiles — it is the method's lesson: a grid too large for only 20 teams does not generalize.",
+      "story_cluster_both": "**{name}** ({size} teams · {teams}) — excels in **{high}** and falls short in **{low}**.",
+      "story_cluster_high": "**{name}** ({size} teams · {teams}) — excels in **{high}**.",
+      "story_cluster_low": "**{name}** ({size} teams · {teams}) — falls short in **{low}**.",
+      "story_cluster_balanced": "**{name}** ({size} teams · {teams}) — a balanced profile, with no extreme traits.",
+      "export_report": "Export Report"
+    },
+    "knowledge_hub": {
+      "title": "DataMill Analytics",
+      "subtitle": "Technical whitepaper of the analytics engine",
+      "lead": "Technical documentation of the product: from raw data to **outcome prediction** and **playing-style discovery**. Architecture, methodology and engine stack.",
+      "stack_languages": "Language",
+      "stack_frontend": "Front-end & Reactivity",
+      "stack_ml": "Machine Learning Engine",
+      "stack_i18n": "Internationalization & Accessibility",
+      "sec1_title": "1 · The Analytics Engine",
+      "sec1_body": "**DataMill Analytics** is a professional football analytics engine that applies *exhaustive machine learning* to the 2022-23 Premier League with a dual goal: **predicting match outcomes** (supervised learning) and **discovering teams' playing styles** (unsupervised learning).\n\nEach module replicates a rigorous research methodology —closed grid search, cross-validation and statistical testing— and exposes it through a reactive, multilingual and accessible interface. It is not a demo: it is an end-to-end reproducible *pipeline*, with the mathematics isolated from the front-end and results cached for fluid exploration.",
+      "sec2_title": "2 · Supervised Architecture — Match Prediction",
+      "sec2_body": "#### Data leakage prevention\nThe final result (FTR) is determined by the scoreline, and the match statistics (shots, corners, fouls…) are generated **during** the game. Using them as input would be catastrophic leakage. That is why, for each match, the **rolling averages of each team's 5 previous matches** are computed (recent form, goals, shots on target, corners, cards…) along with their differentials. Intra-match information only feeds the history; it **never** enters as a predictor.\n\n#### Evaluated algorithms\nSix families trained via **closed grid search** (no open ranges):\n- **Baseline** — Logistic Regression (L2).\n- **ANN** — 8 topologies of 1-2 hidden layers.\n- **SVM** — 8 configurations (linear, polynomial g=3 and RBF).\n- **Decision Trees** — depth 2 to 7.\n- **k-NN** — odd k from 1 to 11.\n- **DoME (proxy)** — Random Forest bounded by number of nodes.\n\n#### Statistical rigor\n- **Stratified 10-fold cross-validation**, with a fixed seed for total reproducibility.\n- **Strict per-fold Z-score standardization**: mean and standard deviation are computed only on each partition's *train* set (zero leakage).\n- **Shapiro-Wilk test** on the 10 accuracies (normality) and **Wilcoxon signed-rank** for pairwise comparison. When two models are statistically equivalent, **Occam's Razor** applies: the simpler, more interpretable one is favored.",
+      "sec3_title": "3 · Unsupervised Architecture — Team Profiling",
+      "sec3_body": "The *Team Profiling* module summarizes each team's season into **5 advanced KPIs** —attacking volume, efficiency, defensive solidity, game control and aggressiveness— and standardizes them with Z-score.\n\n#### Pipeline\n- **PCA** — principal component analysis: it reports how many components are needed to explain from 70 to 95 % of the variance, and projects the teams into 2D (PC1/PC2) for visualization.\n- **K-Means** — k from 2 to 7.\n- **Hierarchical clustering** — via `scipy.cluster.hierarchy` (`linkage` + `fcluster`), with the *ward, complete, average, single* methods and **centroid**.\n- **SOM networks** — *Self-Organizing Maps* (`minisom`) over 6 symmetric high-dimensional grids, from 4×4 to 10×10.\n\n#### Evaluation\nThe quality of each grouping is measured with the **Silhouette Score**. The system explicitly handles **over-segmentation**: when a large SOM grid assigns almost one team per neuron, the Silhouette becomes undefined and is reported as such, instead of fabricating a value.",
+      "sec4_title": "4 · Technology Stack & UI/UX",
+      "sec4_body": "The software core combines a robust mathematical *back-end* with a fully reactive *front-end*:\n\n- **Python** as the base language.\n- **Dash** and **Plotly** for the reactive interface and the interactive visualizations (PCA scatter, radars, *heatmaps*, Monte Carlo simulations).\n- **scikit-learn**, **SciPy** and **MiniSom** as the *machine learning* engine (supervised models, PCA, hierarchical clustering and SOM).\n\n**Custom i18n architecture.** Multi-language support is **native**, not a patch: a custom *translator* with hierarchical keys, cascading *fallback* and dynamic formatting serves the entire application in **6 languages** with no external dependencies. The interface also follows accessibility principles and a **colorblind-safe palette** (CVD-safe).",
+      "sec5_title": "5 · Core Team",
+      "sec5_body": "**Brais Muiño Otero** — *Lead Data Scientist & Engineer*\n\nFull design, development and implementation of the project: data engineering, *machine learning* engine, application architecture, visualization and internationalization.\n\n🔗 **GitHub:** [github.com/brais-muino-otero](https://github.com/brais-muino-otero)  ·  **Live demo:** [huggingface.co/spaces/Braizito/datamill-analytics](https://huggingface.co/spaces/Braizito/datamill-analytics)"
+    }
+  },
+  "common": {
+    "under_construction": "🚧 Page under construction",
+    "not_found": "The route «{path}» does not exist.",
+    "go_home": "Back to home"
+  }
+}
