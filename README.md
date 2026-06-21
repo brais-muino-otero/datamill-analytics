@@ -1,13 +1,3 @@
----
-title: DataMill Analytics
-emoji: ⚽
-colorFrom: blue
-colorTo: indigo
-sdk: docker
-app_port: 8050
-pinned: false
----
-
 # Premier League Analytics
 
 Web app interactiva (Dash + Plotly) para analisis y prediccion de la Premier
